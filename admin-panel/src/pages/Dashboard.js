@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./Dashboard.css";
 
 function Dashboard() {
   const [users, setUsers] = useState([]);
@@ -15,6 +16,7 @@ function Dashboard() {
             },
           }
         );
+
         setUsers(res.data);
       } catch (err) {
         console.log(err);
@@ -25,18 +27,47 @@ function Dashboard() {
     fetchUsers();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
   return (
     <div>
-      <h1>Admin Dashboard</h1>
+      <div className="topBar">
+        <h1 className="title">Admin Dashboard</h1>
 
-      {users.map((user) => (
-        <div key={user._id}>
-          <p>{user.name}</p>
-          <p>{user.email}</p>
-          <p>{user.role}</p>
-          <hr />
-        </div>
-      ))}
+        <button className="logoutBtn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+
+      <table className="userTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {users.map((user) => (
+      <tr key={user._id}>
+        <td>{user.name}</td>
+        <td>{user.email}</td>
+        <td>{user.role}</td>
+
+        <td>
+          <button className="deleteBtn">
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
     </div>
   );
 }
